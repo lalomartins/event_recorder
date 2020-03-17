@@ -2,6 +2,7 @@ import 'package:event_recorder/db.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:strings/strings.dart';
+import 'package:yaml/yaml.dart';
 
 class AddScreen extends StatefulWidget {
   final Event event;
@@ -103,8 +104,16 @@ class _AddScreenState extends State<AddScreen> {
             ),
             textField('additional',
                 multiline: true,
-                validator: (value) =>
-                    value.isNotEmpty ? 'not yet supported' : null),
+                validator: (String value) {
+                  if (value.isEmpty) return null;
+                  try {
+                    var v = loadYaml(value);
+                    if (v is Map) return null;
+                    else return 'If additional data is provided, it must be a mapping';
+                  } catch (e) {
+                    return 'Invalid YAML';
+                  }
+                }),
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),

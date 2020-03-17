@@ -26,6 +26,7 @@ dependencies:
   path:
   provider: ^3.1.0
   strings:
+  yaml: ^2.2.0
 
 dev_dependencies:
   flutter_test:

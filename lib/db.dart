@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:moor/moor.dart';
 import 'package:moor_ffi/moor_ffi.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:yaml/yaml.dart';
 
 import 'model/event.dart';
 
@@ -42,9 +44,19 @@ class EventDatabase extends _$EventDatabase {
   Stream<List<Event>> get watchAllEvents => select(events).watch();
 
   Future<int> createEventFromMap(Map<String, dynamic> data) {
+    bool copied = false;
     if (data['timestamp'] is DateTime) {
       data =  data.map((k, v) => MapEntry(k, v));
+      copied = true;
       data['timestamp'] = (data['timestamp'] as DateTime).millisecondsSinceEpoch;
+    }
+    String additional = data['additional'];
+    if (additional != null && additional.isNotEmpty && !additional.startsWith('{')) {
+      if (!copied) {
+        data =  data.map((k, v) => MapEntry(k, v));
+        copied = true;
+      }
+      data['additional'] = json.encode(loadYaml(additional));
     }
     var ec = Event.fromJson(data).createCompanion(true);
     return into(events).insert(ec);
