@@ -28,5 +28,25 @@ class EventDatabase extends _$EventDatabase {
   @override
   int get schemaVersion => 1;
 
+  // @override
+  // MigrationStrategy get migration => MigrationStrategy(
+  //   onCreate: (Migrator m) {
+  //     return m.createAll();
+  //   },
+  //   onUpgrade: (Migrator m, int from, int to) async {
+  //     if (from == 1) {
+  //     }
+  //   }
+  // );
+
   Stream<List<Event>> get watchAllEvents => select(events).watch();
+
+  Future<int> createEventFromMap(Map<String, dynamic> data) {
+    if (data['timestamp'] is DateTime) {
+      data =  data.map((k, v) => MapEntry(k, v));
+      data['timestamp'] = (data['timestamp'] as DateTime).millisecondsSinceEpoch;
+    }
+    var ec = Event.fromJson(data).createCompanion(true);
+    return into(events).insert(ec);
+  }
 }

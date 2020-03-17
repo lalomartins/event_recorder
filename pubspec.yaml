@@ -25,6 +25,7 @@ dependencies:
   path_provider:
   path:
   provider: ^3.1.0
+  strings:
 
 dev_dependencies:
   flutter_test:

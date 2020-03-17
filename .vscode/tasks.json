@@ -20,10 +20,7 @@
         "$dart-pub-build_runner"
       ],
       "isBackground": false,
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "group": "build"
     },
     {
       "label": "generate Moor code and watch",
@@ -33,7 +30,10 @@
         "$dart-pub-build_runner"
       ],
       "isBackground": true,
-      "group": "build"
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     }
   ]
 }
