@@ -22,7 +22,6 @@ LazyDatabase _openConnection() {
   });
 }
 
-
 @UseMoor(tables: [Events])
 class EventDatabase extends _$EventDatabase {
   EventDatabase() : super(_openConnection());
@@ -41,19 +40,25 @@ class EventDatabase extends _$EventDatabase {
   //   }
   // );
 
-  Stream<List<Event>> get watchAllEvents => select(events).watch();
+  Stream<List<Event>> get watchAllEvents => (select(events)
+        ..orderBy(
+            [(u) => OrderingTerm(expression: u.id, mode: OrderingMode.desc)]))
+      .watch();
 
   Future<int> createEventFromMap(Map<String, dynamic> data) {
     bool copied = false;
     if (data['timestamp'] is DateTime) {
-      data =  data.map((k, v) => MapEntry(k, v));
+      data = data.map((k, v) => MapEntry(k, v));
       copied = true;
-      data['timestamp'] = (data['timestamp'] as DateTime).millisecondsSinceEpoch;
+      data['timestamp'] =
+          (data['timestamp'] as DateTime).millisecondsSinceEpoch;
     }
     String additional = data['additional'];
-    if (additional != null && additional.isNotEmpty && !additional.startsWith('{')) {
+    if (additional != null &&
+        additional.isNotEmpty &&
+        !additional.startsWith('{')) {
       if (!copied) {
-        data =  data.map((k, v) => MapEntry(k, v));
+        data = data.map((k, v) => MapEntry(k, v));
         copied = true;
       }
       data['additional'] = json.encode(loadYaml(additional));
