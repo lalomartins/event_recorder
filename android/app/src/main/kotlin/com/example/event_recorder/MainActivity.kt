@@ -1,4 +1,4 @@
-package com.example.event_recorder
+package info.lalomartins.event_recorder
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
