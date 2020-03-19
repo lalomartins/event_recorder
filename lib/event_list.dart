@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'db.dart';
+import 'event_card.dart';
 
 class EventList extends StatelessWidget {
   @override
@@ -25,21 +26,5 @@ class EventList extends StatelessWidget {
             itemBuilder: (context, index) => EventCard(event: events[index]),
           );
         });
-  }
-}
-
-class EventCard extends StatelessWidget {
-  const EventCard({
-    Key key,
-    @required this.event,
-  }) : super(key: key);
-
-  final Event event;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      event.name
-    );
   }
 }
