@@ -4,13 +4,22 @@ import 'package:provider/provider.dart';
 import 'package:strings/strings.dart';
 import 'package:yaml/yaml.dart';
 
-class AddScreen extends StatefulWidget {
+class AddScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final Event event = ModalRoute.of(context).settings.arguments;
+    return AddEventForm(event);
+  }
+  
+}
+
+class AddEventForm extends StatefulWidget {
   final Event event;
 
-  AddScreen([this.event]) : super();
+  AddEventForm([this.event]) : super();
 
   @override
-  _AddScreenState createState() => _AddScreenState(event);
+  _AddEventFormState createState() => _AddEventFormState(event);
 }
 
 String validateNonEmpty(String value) {
@@ -20,11 +29,11 @@ String validateNonEmpty(String value) {
   return null;
 }
 
-class _AddScreenState extends State<AddScreen> {
+class _AddEventFormState extends State<AddEventForm> {
   final _formKey = GlobalKey<FormState>();
   Map<String, dynamic> event;
 
-  _AddScreenState(_event) {
+  _AddEventFormState(_event) {
     if (_event == null) {
       event = {
         'timestamp': DateTime.now(),
@@ -32,8 +41,8 @@ class _AddScreenState extends State<AddScreen> {
       };
     } else {
       event = _event.toJson();
-      event['timestamp'] =
-          DateTime.fromMillisecondsSinceEpoch(event['timestamp']);
+      event['id'] = null;
+      event['timestamp'] = DateTime.now();
     }
   }
 
@@ -63,9 +72,9 @@ class _AddScreenState extends State<AddScreen> {
             textField('description', multiline: true, validator: null),
             CheckboxListTile(
               title: Text('Real time'),
-              value: event['realtime'],
+              value: event['realTime'] ?? false,
               onChanged: (newValue) =>
-                  setState(() => event['realtime'] = newValue),
+                  setState(() => event['realTime'] = newValue),
             ),
             Row(
               children: <Widget>[
