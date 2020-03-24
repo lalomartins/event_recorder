@@ -29,7 +29,8 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
             title: 'Flutter Demo',
-            theme: recorderTheme,
+            theme: recorderLightTheme,
+            darkTheme: recorderDarkTheme,
             initialRoute: '/',
             routes: {
               '/': (context) => Scaffold(
